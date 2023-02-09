@@ -37,16 +37,7 @@ class utils():
         random_mac = random_mac[:-1]
         return random_mac
 
-    def validateHex(s):
-
-        for ch in s:
-
-            if ((ch < '0' or ch > '9') and
-                    (ch < 'A' or ch > 'F')):
-                print("No")
-                return
-
-# method for validate if MAC is valid
+# method for validate if MAC is corrupted
     def mac_validator(self, mac):
         assert len(mac) == 17, "Corrupted MAC address found - length is not as expected"
         assert mac.count(':'), "Corrupted MAC address found - invalid amount of ':' "
@@ -55,16 +46,17 @@ class utils():
         for index in range(0, len(mac)):
             digit = int(mac[index],16)   # casting from HEX to INT
             if (digit not in range(0, 15)):
-                assert digit not in range(0, 15), "Corrupted MAC address found - not in range (0-15) digit "
+                assert digit not in range(0,15), "Corrupted MAC address found - not in range (0-15) digit "
 
-#   method for validate if stream is valid
+#   method for validate if stream is valid per each item
 
     def stream_validator(self, stream):
         for mac in stream:
             index = stream.index(mac)
-            print('Try to analyze MAC at position# ', index, 'MAC = ', mac)
+            # to consider if this log needed in case of high amount of MAC at list(~ more than 100) - performance issue
+            print(f"Analyze MAC at position {index} , MAC = {mac}")
 
             if ((index % 10 == 0) & (index > 0)):
-                assert mac != self.pre_mac, "MAC adress at multiple 10 position is not as expected"
+                assert mac != self.pre_mac, "MAC at multiple 10 position is equals to pre-define MAC"
 
             self.mac_validator(mac)
